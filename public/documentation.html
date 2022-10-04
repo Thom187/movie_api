@@ -18,5 +18,80 @@
       <li>Allow users to remove a movie to their list of favorites</li>
       <li>Allow existing users to deregister</li>
     </ul>
+    <table>
+      <tr>
+        <th>Business logic</th>
+        <th>endpoint URL</th>
+        <th>HTTP method</th>
+        <th>Request body data format</th>
+        <th>Response body data format</th>
+      </tr>
+      <tr>
+        <td>Return all movies</td>
+        <td>/movies</td>
+        <td>GET</td>
+        <td>none</td>
+        <td>JSON object holding data about all movies</td>
+      </tr>
+      <tr>
+        <td>Return data about a single movie by title</td>
+        <td>/movies/[Title]</td>
+        <td>GET</td>
+        <td></td>
+        <td>JSON object holding data about a single movie </td>
+      </tr>
+      <tr>
+        <td>Return data about a genre by name/title</td>
+        <td>/movies/genre/[genreName]</td>
+        <td>GET</td>
+        <td></td>
+        <td>JSON object holding data about a genre</td>
+      </tr>
+      <tr>
+        <td>Return data about a director by name</td>
+        <td>/movies/directors/[directorName]</td>
+        <td>GET</td>
+        <td></td>
+        <td>JSON object holding data about a director</td>
+      </tr>
+      <tr>
+        <td>Add new Users</td>
+        <td>/users</td>
+        <td>POST</td>
+        <td>JSON object holding data about the users to add, structured like:
+          {
+            "Name": "Tim",
+            "favoriteMovies": ["Movie 1", "Movie 2"]
+          }
+        </td>
+        <td>JSON object holding data about the users added, including an ID</td>
+      </tr>
+      <tr>
+        <td>Update user information</td>
+        <td>/users/[ID]</td>
+        <td>PUT</td>
+        <td>JSON object holding data about the user to update, structured like:
+          {
+            "Name": "New Name"
+          }
+        </td>
+        <td>JSON object holding data about the updated user , including an ID</td>
+      </tr>
+      <tr>
+        <td>Add a new movie to users favoriteMovies list</td>
+        <td>/user/[ID]/[movieTitle]</td>
+        <td>POST</td>
+        <td></td>
+        <td>A text message confirming that the new movie was added to the favorite movies list</td>
+      </tr>
+      <tr>
+        <td>Delete a movie from a users favoriteMovies list</td>
+        <td>/user/[ID]/[movieTitle]</td>
+        <td>POST</td>
+        <td></td>
+        <td>A text message confirming that the new movie was removed from the favorite movies list</td>
+      </tr>
+
+    </table>
   </body>
 </html>
