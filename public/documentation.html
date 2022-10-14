@@ -42,14 +42,14 @@
       </tr>
       <tr>
         <td>Return data about a genre by name/title</td>
-        <td>/movies/genre/[genreName]</td>
+        <td>/genres/[genreName]</td>
         <td>GET</td>
         <td></td>
-        <td>JSON object holding data about a genre</td>
+        <td>Returns the definition of a genre</td>
       </tr>
       <tr>
         <td>Return data about a director by name</td>
-        <td>/movies/directors/[directorName]</td>
+        <td>/directors/[directorName]</td>
         <td>GET</td>
         <td></td>
         <td>JSON object holding data about a director</td>
@@ -60,36 +60,45 @@
         <td>POST</td>
         <td>JSON object holding data about the users to add, structured like:
           {
-            "Name": "Tim",
-            "favoriteMovies": ["Movie 1", "Movie 2"]
+            "Username": "Tim",
+            "Email": "123",
+            "Password": "123",
+            "Birthday": "1987-01-15"
           }
         </td>
         <td>JSON object holding data about the users added, including an ID</td>
       </tr>
       <tr>
         <td>Update user information</td>
-        <td>/users/[ID]</td>
+        <td>/users/[Username]</td>
         <td>PUT</td>
         <td>JSON object holding data about the user to update, structured like:
           {
-            "Name": "New Name"
+            "Username": "New Name"
           }
         </td>
         <td>JSON object holding data about the updated user , including an ID</td>
       </tr>
       <tr>
         <td>Add a new movie to users favoriteMovies list</td>
-        <td>/user/[ID]/[movieTitle]</td>
+        <td>/user/[Username]/movies/[Title]</td>
         <td>POST</td>
         <td></td>
-        <td>A text message confirming that the new movie was added to the favorite movies list</td>
+        <td>A JSON object holding data about the user, including the added favorite movie</td>
       </tr>
       <tr>
         <td>Delete a movie from a users favoriteMovies list</td>
-        <td>/user/[ID]/[movieTitle]</td>
-        <td>POST</td>
+        <td>/user/[Username]/movies/[Title]</td>
+        <td>DELETE</td>
         <td></td>
-        <td>A text message confirming that the new movie was removed from the favorite movies list</td>
+        <td>A JSON object holding data about the user, excluding the delteted movie</td>
+      </tr>
+      <tr>
+        <td>Delete a user </td>
+        <td>/user/[Username]</td>
+        <td>DELETE</td>
+        <td></td>
+        <td>A text message showing that the user was deleted</td>
       </tr>
 
     </table>
