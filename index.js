@@ -23,75 +23,87 @@ app.get('/', (req, res) => {
 });
 
 // Read/ Return a list of all movies
-app.get('/movies', (req, res) => {
-  Movies.find()
-    .then((movies) => {
+app.get('/movies', async (req, res) => {
+  try {
+    const movies = await Movies.find();
+    if (movies) {
       res.status(200).json(movies);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
+    } else {
+      res.status(400).json({ message: 'movies not found'});
+    }
+  } catch (error) {
+    res.status(500).send('Error: ' + error);
+  }
 });
 
 // Return/READ data about a single movie by title
-app.get('/movies/:title', (req, res) => {
-  Movies.findOne({ title: req.params.title })
-    .then((movie) => {
-      res.json(movie);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
+app.get('/movies/:title', async (req, res) => {
+  try {
+    const movie = await Movies.findOne({ title: req.params.title });
+    if (movie) {
+      res.status(200).json(movie);
+    } else {
+      res.status(400).json({ message: 'Could not find movie.'});
+    }
+  } catch (error) {
+    res.status(500).send('Error: ' + error);
+  }
 });
 
 // Return/READ data about a genre by name/title
-app.get('/genres/:genre', (req, res) => {
-  Movies.findOne({ "genre.name": req.params.genre })
-    .then((movie) => {
-      res.send(movie.genre.description);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(400).send('Genre not found');
-    });
+app.get('/genres/:genre', async (req, res) => {
+  try {
+    const movie = await Movies.findOne({ 'genre.name': req.params.genre});
+    if (movie) {
+      res.status(200).send(movie.genre.description);
+    } else {
+      res.status(400).send({ message: 'Could not find genre'});
+    }
+  } catch (error) {
+    res.status(500).send('Error: ' + error);
+  }
 });
 
 // Return/READ data about a director by name
-app.get('/directors/:director', (req, res) => {
-  Movies.findOne({ "director.name": req.params.director })
-    .then((movie) => {
-      res.send(movie.director);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(400).send('Director not found');
-    });
+app.get('/directors/:director', async (req, res) => {
+  try {
+    const movie = await Movies.findOne({ 'director.name': req.params.director});
+    if (movie) {
+      res.status(200).send(movie.director);
+    } else {
+      res.status(400).send({ message: 'Could not find director'});
+    }
+  } catch (error) {
+    res.status(500).send('Error: ' + error);
+  }
 });
 
 // READ/ Get all existing users
-app.get('/users', (req, res) => {
-  Users.find()
-    .then((users) => {
+app.get('/users', async (req, res) => {
+  try {
+    const users = await Users.find();
+    if (users) {
       res.status(200).json(users);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('Error: ' + err);
-    });
+    } else {
+      res.status(400).json({ message: 'users not found'});
+    }
+  } catch (error) {
+    res.status(500).send('Error: ' + error);
+  }
 });
 
 // Get a user by username
-app.get('/users/:username', (req, res) => {
-  Users.findOne({ username: req.params.username})
-    .then((user) => {
-      res.json(user);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send('User not found' + err);
-    });
+app.get('/users/:username', async (req, res) => {
+  try {
+    const user = await Users.findOne({ username: req.params.username });
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(400).json({ message: 'Could not find user.'});
+    }
+  } catch (error) {
+    res.status(500).send('Error: ' + error);
+  }
 });
 
 // CREATE a new User : Format JSON :
@@ -102,30 +114,23 @@ app.get('/users/:username', (req, res) => {
      password: String;
      birthday: Date
    }*/
-app.post('/users', (req, res) => {
-  Users.findOne({ username: req.body.username })
-    .then((user) => {
-      if (user) {
-        return res.status(400).send(req.body.username + ' already exists');
-      } else {
-        Users
-          .create({
-            username: req.body.username,
-            email: req.body.email,
-            password: req.body.password,
-            birthday: req.body.birthday
-          })
-          .then((user) => { res.status(201).json(user) })
-        .catch((error) => {
-          console.error(error);
-          res.status(500).send('Error: ' + error);
-        })
+app.post('/users', async (req, res) => {
+  try {
+    const user = await Users.findOne({ username: req.body.username });
+    if (user) {
+      return res.status(400).send(req.body.username + ' already exists.' );
+    } else {
+      Users.create({
+        username: req.body.username,
+        email: req.body.email,
+        password: req.body.password,
+        birthday: req.body.birthday
+      })
+        res.status(201).json(user);
       }
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send('Error: ' + error);
-    });
+  } catch (error) {
+    res.status(500).send('Error: ' + error);
+    }
 });
 
 // UPDATE an user's info by username: Format JSON:
