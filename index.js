@@ -17,6 +17,10 @@ mongoose.connect('mongodb://localhost:27017/myFlixDatabase', {
 app.use(morgan('common'));
 app.use(express.json());
 
+let auth = require('./auth')(app); // Import auth.js; (app) ensures Express is available in auth
+const passport = require('passport');
+require('./passport');
+
 // GET requests
 app.get('/', (req, res) => {
   res.send('Welcome to myFlix!');
@@ -114,24 +118,31 @@ app.get('/users/:username', async (req, res) => {
      password: String;
      birthday: Date
    }*/
-app.post('/users', async (req, res) => {
-  try {
-    const user = await Users.findOne({ username: req.body.username });
-    if (user) {
-      return res.status(400).send(req.body.username + ' already exists.' );
-    } else {
-      Users.create({
-        username: req.body.username,
-        email: req.body.email,
-        password: req.body.password,
-        birthday: req.body.birthday
-      })
-        res.status(201).json(user);
-      }
-  } catch (error) {
-    res.status(500).send('Error: ' + error);
-    }
-});
+   app.post('/users', (req, res) => {
+     Users.findOne({ username: req.body.username })
+       .then((user) => {
+         if (user) {
+           return res.status(400).send(req.body.username + ' already exists');
+         } else {
+           Users
+             .create({
+               username: req.body.username,
+               email: req.body.email,
+               password: req.body.password,
+               birthday: req.body.birthday
+             })
+             .then((user) => { res.status(201).json(user) })
+           .catch((error) => {
+             console.error(error);
+             res.status(500).send('Error: ' + error);
+           })
+         }
+       })
+       .catch((error) => {
+         console.error(error);
+         res.status(500).send('Error: ' + error);
+       });
+   });
 
 // UPDATE an user's info by username: Format JSON:
 /* {
