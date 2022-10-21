@@ -6,6 +6,8 @@ const express = require("express"),
 const mongoose = require("mongoose");
 const Models = require("./models.js");
 
+require("dotenv").config();
+
 const app = express();
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -14,8 +16,12 @@ mongoose.connect("mongodb://localhost:27017/myFlixDatabase", {
   useUnifiedTopology: true,
 });
 
+const cors = require("cors");
+app.use(cors());
 app.use(morgan("common"));
 app.use(express.json());
+
+const { check, validationResult } = require("express-validator");
 
 let auth = require("./auth")(app); // Import auth.js; (app) ensures Express is available in auth
 const passport = require("passport");
@@ -144,7 +150,21 @@ app.get(
      password: String;
      birthday: Date
    }*/
-app.post("/users", (req, res) => {
+app.post("/users", [
+  // Add validation logic
+  check("username", "Username is required").isLength({min: 6}),
+  check("username", "Username must be alphanumeric").isAlphanumeric(),
+  check("password", "Password is required").not().isEmpty(),
+  check("email", "Email must be in email format").isEmail()
+  ], (req, res) => {
+
+    // Check validation object for errors and handle it
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    let hashedPassword = Users.hashPassword(req.body.password);
     Users.findOne({ username: req.body.username })
       .then((user) => {
         if (user) {
@@ -153,7 +173,7 @@ app.post("/users", (req, res) => {
           Users.create({
             username: req.body.username,
             email: req.body.email,
-            password: req.body.password,
+            password: hashedPassword,
             birthday: req.body.birthday,
           })
             .then((user) => {
@@ -169,8 +189,7 @@ app.post("/users", (req, res) => {
         console.error(error);
         res.status(500).send("Error: " + error);
       });
-  }
-);
+});
 
 // UPDATE an user's info by username: Format JSON:
 /* {
@@ -184,15 +203,28 @@ app.post("/users", (req, res) => {
 }*/
 app.put(
   "/users/:username",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
+  passport.authenticate("jwt", { session: false }), [
+    // Add validation logic
+    check("username", "Username is required").isLength({min: 6}),
+    check("username", "Username must be alphanumeric").isAlphanumeric(),
+    check("password", "Password is required").not().isEmpty(),
+    check("email", "Email must be in email format").isEmail()
+  ], (req, res) => {
+
+    let errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    let hashedPassword = Users.hashPassword(req.body.password);
     Users.findOneAndUpdate(
       { username: req.params.username },
       {
         $set: {
           username: req.body.username,
           email: req.body.email,
-          password: req.body.password,
+          password: hashedPassword,
           birthday: req.body.birthday,
         },
       },
@@ -206,25 +238,6 @@ app.put(
         }
       }
     );
-  }
-);
-
-// UPDATE an existing user
-app.put(
-  "/users/:id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const { id } = req.params;
-    const updatedUser = req.body;
-
-    let user = users.find((user) => user.ID == id);
-
-    if (user) {
-      user.Name = updatedUser.Name;
-      res.status(200).json(user);
-    } else {
-      res.status(400).send("Could not find this user.");
-    }
   }
 );
 
