@@ -1,5 +1,5 @@
 const jwtSecret =
-  process.env.API_KEY; /* This has to be the same key
+  "your_jwt_secret"; /* This has to be the same key
 used in JWTStrategy(passport.js) */
 
 const jwt = require("jsonwebtoken"),
