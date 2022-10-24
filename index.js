@@ -1,4 +1,5 @@
 // Import Express and it's logging middleware morgan
+require("dotenv").config();
 const express = require("express"),
   morgan = require("morgan"),
   bodyParser = require("body-parser"),
@@ -6,7 +7,7 @@ const express = require("express"),
 const mongoose = require("mongoose");
 const Models = require("./models.js");
 
-require("dotenv").config();
+// require("dotenv").config();
 
 const app = express();
 const Movies = Models.Movie;
