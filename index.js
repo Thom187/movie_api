@@ -18,7 +18,7 @@ const Users = Models.User;
 //   useUnifiedTopology: true,
 // });
 
-mongoose.connect( process.env.CONNECTION_URI, {
+mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -42,7 +42,7 @@ app.get("/", (req, res) => {
 // Read/ Return a list of all movies
 app.get(
   "/movies",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     try {
       const movies = await Movies.find();
@@ -159,43 +159,43 @@ app.get(
    }*/
 app.post("/users", [
   // Add validation logic
-  check("username", "Username is required").isLength({min: 6}),
+  check("username", "Username is required").isLength({ min: 6 }),
   check("username", "Username must be alphanumeric").isAlphanumeric(),
   check("password", "Password is required").not().isEmpty(),
   check("email", "Email must be in email format").isEmail()
-  ], (req, res) => {
+], (req, res) => {
 
-    // Check validation object for errors and handle it
-    let errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-    }
+  // Check validation object for errors and handle it
+  let errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
 
-    let hashedPassword = Users.hashPassword(req.body.password);
-    Users.findOne({ username: req.body.username })
-      .then((user) => {
-        if (user) {
-          return res.status(400).send(req.body.username + " already exists");
-        } else {
-          Users.create({
-            username: req.body.username,
-            email: req.body.email,
-            password: hashedPassword,
-            birthday: req.body.birthday,
+  let hashedPassword = Users.hashPassword(req.body.password);
+  Users.findOne({ username: req.body.username })
+    .then((user) => {
+      if (user) {
+        return res.status(400).send(req.body.username + " already exists");
+      } else {
+        Users.create({
+          username: req.body.username,
+          email: req.body.email,
+          password: hashedPassword,
+          birthday: req.body.birthday,
+        })
+          .then((user) => {
+            res.status(201).json(user);
           })
-            .then((user) => {
-              res.status(201).json(user);
-            })
-            .catch((error) => {
-              console.error(error);
-              res.status(500).send("Error: " + error);
-            });
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        res.status(500).send("Error: " + error);
-      });
+          .catch((error) => {
+            console.error(error);
+            res.status(500).send("Error: " + error);
+          });
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Error: " + error);
+    });
 });
 
 // UPDATE an user's info by username: Format JSON:
@@ -211,41 +211,41 @@ app.post("/users", [
 app.put(
   "/users/:username",
   passport.authenticate("jwt", { session: false }), [
-    // Add validation logic
-    check("username", "Username is required").isLength({min: 6}),
-    check("username", "Username must be alphanumeric").isAlphanumeric(),
-    check("password", "Password is required").not().isEmpty(),
-    check("email", "Email must be in email format").isEmail()
-  ], (req, res) => {
+  // Add validation logic
+  check("username", "Username is required").isLength({ min: 6 }),
+  check("username", "Username must be alphanumeric").isAlphanumeric(),
+  check("password", "Password is required").not().isEmpty(),
+  check("email", "Email must be in email format").isEmail()
+], (req, res) => {
 
-    let errors = validationResult(req);
+  let errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-    }
-
-    let hashedPassword = Users.hashPassword(req.body.password);
-    Users.findOneAndUpdate(
-      { username: req.params.username },
-      {
-        $set: {
-          username: req.body.username,
-          email: req.body.email,
-          password: hashedPassword,
-          birthday: req.body.birthday,
-        },
-      },
-      { new: true }, // makes sure that the updated document is returned
-      (err, updatedUser) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send("Error: " + err);
-        } else {
-          res.json(updatedUser);
-        }
-      }
-    );
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
   }
+
+  let hashedPassword = Users.hashPassword(req.body.password);
+  Users.findOneAndUpdate(
+    { username: req.params.username },
+    {
+      $set: {
+        username: req.body.username,
+        email: req.body.email,
+        password: hashedPassword,
+        birthday: req.body.birthday,
+      },
+    },
+    { new: true }, // makes sure that the updated document is returned
+    (err, updatedUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      } else {
+        res.json(updatedUser);
+      }
+    }
+  );
+}
 );
 
 // CREATE/ Add a movie to a user's list of favorites
@@ -329,6 +329,6 @@ app.use((err, req, res, next) => {
 
 // listen for any requests
 const port = process.env.PORT || 8080;
-app.listen(port, "0.0.0.0",() => {
+app.listen(port, "0.0.0.0", () => {
   console.log("Listening on Port " + port);
 });
