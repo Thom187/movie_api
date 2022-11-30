@@ -249,7 +249,7 @@ app.put(
       $set: {
         username: req.body.username,
         email: req.body.email,
-        password: hashedPassword,
+        password: req.body.password,
         birthday: req.body.birthday,
       },
     },
