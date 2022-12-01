@@ -266,28 +266,28 @@ app.post("/users", [
 // }
 // );
 
-// // CREATE/ Add a movie to a user's list of favorites
-// app.post(
-//   "/users/:username/:movies/:MovieID",
-//   passport.authenticate("jwt", { session: false }),
-//   (req, res) => {
-//     Users.findOneAndUpdate(
-//       { username: req.params.username },
-//       {
-//         $push: { favoriteMovies: req.params.MovieID },
-//       },
-//       { new: true }, // to make sure that the updated document is returned
-//       (err, updatedUser) => {
-//         if (err) {
-//           console.error(err);
-//           res.status(500).send("Error: " + err);
-//         } else {
-//           res.json(updatedUser);
-//         }
-//       }
-//     );
-//   }
-// );
+// CREATE/ Add a movie to a user's list of favorites
+app.post(
+  "/users/:username/:movies/:MovieID",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Users.findOneAndUpdate(
+      { username: req.params.username },
+      {
+        $push: { favoriteMovies: req.params.MovieID },
+      },
+      { new: true }, // to make sure that the updated document is returned
+      (err, updatedUser) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send("Error: " + err);
+        } else {
+          res.json(updatedUser);
+        }
+      }
+    );
+  }
+);
 
 app.put('/users/:username', passport.authenticate('jwt', { session: false }), userValidation, (req, res) => {
   let hashedPassword = Users.hashPassword(req.body.password);
