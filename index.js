@@ -240,29 +240,32 @@ app.put(
 
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
-  } else if (req.body.password);
+  }
 
-  let hashedPassword = Users.hashPassword(req.body.password);
-  Users.findOneAndUpdate(
-    { username: req.params.username },
-    {
-      $set: {
-        username: req.body.username,
-        email: req.body.email,
-        password: hashedPassword,
-        birthday: req.body.birthday,
+  if (req.body.password) {
+
+    let hashedPassword = Users.hashPassword(req.body.password);
+    Users.findOneAndUpdate(
+      { username: req.params.username },
+      {
+        $set: {
+          username: req.body.username,
+          email: req.body.email,
+          password: hashedPassword,
+          birthday: req.body.birthday,
+        },
       },
-    },
-    { new: true }, // makes sure that the updated document is returned
-    (err, updatedUser) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send("Error: " + err);
-      } else {
-        res.json(updatedUser);
+      { new: true }, // makes sure that the updated document is returned
+      (err, updatedUser) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send("Error: " + err);
+        } else {
+          res.json(updatedUser);
+        }
       }
-    }
-  );
+    );
+  };
 }
 );
 
