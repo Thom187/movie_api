@@ -232,7 +232,7 @@ app.put(
   // Add validation logic
   check("username", "Username is required").isLength({ min: 6 }),
   check("username", "Username must be alphanumeric").isAlphanumeric(),
-  check("password", "Password is required").optional({ nullable: true }),
+  check("password", "Password is required").not().isEmpty().optional({ nullable: true }),
   check("email", "Email must be in email format").isEmail()
 ], (req, res) => {
 
@@ -242,30 +242,27 @@ app.put(
     return res.status(422).json({ errors: errors.array() });
   }
 
-  if (req.body.password) {
-
-    let hashedPassword = Users.hashPassword(req.body.password);
-    Users.findOneAndUpdate(
-      { username: req.params.username },
-      {
-        $set: {
-          username: req.body.username,
-          email: req.body.email,
-          password: hashedPassword,
-          birthday: req.body.birthday,
-        },
+  let hashedPassword = Users.hashPassword(req.body.password);
+  Users.findOneAndUpdate(
+    { username: req.params.username },
+    {
+      $set: {
+        username: req.body.username,
+        email: req.body.email,
+        password: hashedPassword,
+        birthday: req.body.birthday,
       },
-      { new: true }, // makes sure that the updated document is returned
-      (err, updatedUser) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send("Error: " + err);
-        } else {
-          res.json(updatedUser);
-        }
+    },
+    { new: true }, // makes sure that the updated document is returned
+    (err, updatedUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      } else {
+        res.json(updatedUser);
       }
-    );
-  };
+    }
+  );
 }
 );
 
