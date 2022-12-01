@@ -232,7 +232,7 @@ app.put(
   // Add validation logic
   check("username", "Username is required").isLength({ min: 6 }),
   check("username", "Username must be alphanumeric").isAlphanumeric(),
-  check("password", "Password is required").not().isEmpty(),
+  check("password", "Password is required").optional({ nullable: true }),
   check("email", "Email must be in email format").isEmail()
 ], (req, res) => {
 
