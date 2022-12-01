@@ -242,31 +242,29 @@ app.put(
     return res.status(422).json({ errors: errors.array() });
   }
 
-  if (req.body.password) {
-    password = req.body.password;
-
-    let hashedPassword = Users.hashPassword(req.body.password);
-    Users.findOneAndUpdate(
-      { username: req.params.username },
-      {
-        $set: {
-          username: req.body.username,
-          email: req.body.email,
-          password: hashedPassword,
-          birthday: req.body.birthday,
-        },
+  let hashedPassword = Users.hashPassword(req.body.password);
+  if (req.body.password) { req.body.password = hashedPassword };
+  Users.findOneAndUpdate(
+    { username: req.params.username },
+    {
+      $set: {
+        username: req.body.username,
+        email: req.body.email,
+        password: hashedPassword,
+        birthday: req.body.birthday,
       },
-      { new: true }, // makes sure that the updated document is returned
-      (err, updatedUser) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send("Error: " + err);
-        } else {
-          res.json(updatedUser);
-        }
+    },
+    { new: true }, // makes sure that the updated document is returned
+    (err, updatedUser) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error: " + err);
+      } else {
+        res.json(updatedUser);
       }
-    );
-  }
+    }
+  );
+}
 );
 
 // CREATE/ Add a movie to a user's list of favorites
