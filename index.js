@@ -40,7 +40,8 @@ let allowedOrigins = [
   'http://localhost:1234',
   'https://my-flix1987.herokuapp.com',
   'https://thom187-myflix-movies.netlify.app',
-  'https://myflix-thom187.netlify.app'
+  'https://myflix-thom187.netlify.app',
+  'https://myflix-movie-api.onrender.com'
 ];
 
 app.use(morgan("common"));
