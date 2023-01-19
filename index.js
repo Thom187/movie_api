@@ -38,7 +38,7 @@ app.use(cors({
 let allowedOrigins = [
   'http://localhost:8080',
   'http://localhost:1234',
-  'https://localhost:4200',
+  'http://localhost:4200',
   'https://thom187-myflix-movies.netlify.app',
   'https://myflix-thom187.netlify.app',
   'https://myflix-movie-api.onrender.com'
