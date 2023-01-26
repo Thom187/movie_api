@@ -41,7 +41,8 @@ let allowedOrigins = [
   'http://localhost:4200',
   'https://thom187-myflix-movies.netlify.app',
   'https://myflix-thom187.netlify.app',
-  'https://myflix-movie-api.onrender.com'
+  'https://myflix-movie-api.onrender.com',
+  'https://thom187.github.io/myFlix-Angular-client'
 ];
 
 app.use(morgan("common"));
