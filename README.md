@@ -11,10 +11,6 @@ REST API - myFlix
 - Express
 - MongoDB
 
-– JavaScript
-– Node.js
-– Express
-– MongoDB
 
 ## Links
 
@@ -37,8 +33,6 @@ personal information, and create a list of their favorite movies.
 
 ## User Stories
 
-
-- As a user, I want to be able to receive information on movies, directors, and genres so that I can learn more about movies I’ve watched or am interested in.
 
 - As a user, I want to be able to receive information on movies, directors, and genres so that I can learn more about movies I’ve watched or am interested in.
 
