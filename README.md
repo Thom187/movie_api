@@ -16,7 +16,6 @@ REST API - myFlix
 – Express
 – MongoDB
 
-
 ## Links
 
 [Live Demo Link](https://myflix-movie-api.onrender.com/)
@@ -68,4 +67,3 @@ personal information, and create a list of their favorite movies.
 – Allow users to add a movie to their list of favorites
 – Allow users to remove a movie from their list of favorites
 – Allow existing users to deregister
-
