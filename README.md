@@ -12,8 +12,8 @@ REST API - myFlix
 
 ## Links
 
-[Live Demo Link](https://my-flix1987.herokuapp.com/)
-[GitHub repository Link] (https://github.com/Thom187/movie_api)
+[Live Demo Link](https://myflix-movie-api.onrender.com/)
+[GitHub repository Link](https://github.com/Thom187/movie_api)
 
 
 ## My Role
