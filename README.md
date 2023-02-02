@@ -50,3 +50,7 @@ personal information, and create a list of their favorite movies.
 - Allow users to add a movie to their list of favorites
 - Allow users to remove a movie from their list of favorites
 - Allow existing users to deregister
+
+## Documentation of endpoints
+
+[Endpoints](https://github.com/Thom187/movie_api/blob/main/public/documentation.html)
