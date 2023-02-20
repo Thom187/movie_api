@@ -2,13 +2,13 @@ const jwtSecret =
   process.env.API_KEY; /* This has to be the same key
 used in JWTStrategy(passport.js) */
 
-const jwt = require("jsonwebtoken"),
-  passport = require("passport");
+import { sign } from "jsonwebtoken";
+import { authenticate } from "passport";
 
-require("./passport"); // My local passport file
+import "./passport"; // My local passport file
 
 let generateJWTToken = (user) => {
-  return jwt.sign(user, jwtSecret, {
+  return sign(user, jwtSecret, {
     subject: user.username, // This is the username you are encoding in the JWT
     expiresIn: "7d", // Expires in 7 days
     algorithm: "HS256" /* This is the algorithm used to "sign" or encode
@@ -17,9 +17,9 @@ let generateJWTToken = (user) => {
 };
 
 // POST login.
-module.exports = (router) => {
+export default (router) => {
   router.post("/login", (req, res) => {
-    passport.authenticate("local", { session: false }, (error, user, info) => {
+    authenticate("local", { session: false }, (error, user, info) => {
       if (error || !user) {
         return res.status(400).json({
           message: "Something is not right",
