@@ -50,7 +50,7 @@ app.use(express.json());
 
 const { check, validationResult } = require("express-validator");
 
-let auth = require("./auth").default(app); // Import auth.js; (app) ensures Express is available in auth
+let auth = require("./auth")(app); // Import auth.js; (app) ensures Express is available in auth
 const passport = require("passport");
 require("./passport");
 
